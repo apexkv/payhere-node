@@ -1,3 +1,5 @@
+// src/types.ts
+
 export type Currency = "LKR" | "USD" | "EUR";
 
 export type PayHereTokenResponse = {

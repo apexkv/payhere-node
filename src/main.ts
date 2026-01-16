@@ -1,3 +1,4 @@
+// src/main.ts
 import crypto from "crypto";
 import {
 	PayHereTokenResponse,
@@ -11,6 +12,22 @@ import { PayHereError } from "./errors";
 
 const PAYHERE_VERSION = "v1";
 
+/**
+ * Generate the PayHere payment hash required for frontend checkout.
+ *
+ * This hash ensures the integrity of the payment request and must be
+ * generated on the server side in production environments.
+ *
+ * @param order_id - Your internal order ID
+ * @param amount - Payment amount as a string (e.g. "1000.00")
+ * @param merchant_id - PayHere merchant ID
+ * @param merchant_secret - PayHere merchant secret
+ * @param currency - Currency code (default: "LKR")
+ *
+ * @returns MD5 hash string for PayHere checkout
+ *
+ * @throws PayHereError if merchant credentials are missing
+ */
 export function generatePaymentHash(
 	order_id: string,
 	amount: string,
@@ -31,6 +48,17 @@ export function generatePaymentHash(
 	return crypto.createHash("md5").update(hashString).digest("hex").toUpperCase();
 }
 
+/**
+ * Verify the payment signature sent by PayHere in webhook notifications.
+ *
+ * This ensures that the payment data has not been tampered with.
+ *
+ * @param data - Webhook payload from PayHere
+ * @param merchant_id - Your PayHere merchant ID
+ * @param merchant_secret - Your PayHere merchant secret
+ *
+ * @returns true if the signature is valid, false otherwise
+ */
 export function verifyPaymentSignature(data: any, merchant_id: string, merchant_secret: string): boolean {
 	const required = ["order_id", "payhere_amount", "status_code", "md5sig", "payhere_currency"];
 
@@ -48,6 +76,21 @@ export function verifyPaymentSignature(data: any, merchant_id: string, merchant_
 	return generated === data.md5sig;
 }
 
+/**
+ * Main PayHere SDK client.
+ *
+ * Handles:
+ * - OAuth token generation
+ * - Payment retrieval
+ * - Refund processing
+ * - Hash generation
+ * - Signature verification
+ *
+ * Example:
+ * ```ts
+ * const payhere = new PayHere("MID", "SECRET", "APP_ID", "APP_SECRET");
+ * ```
+ */
 export class PayHere {
 	private _authorizationCode = "";
 	private _accessToken = "";
@@ -62,22 +105,29 @@ export class PayHere {
 		public request_timeout = 20000
 	) {}
 
+	/** Get the correct PayHere base URL (sandbox or production). */
 	private baseUrl() {
 		return this.sandbox_enabled ? "https://sandbox.payhere.lk" : "https://www.payhere.lk";
 	}
 
+	/** Ensure merchant credentials are provided. */
 	private needMerchantCredentials() {
 		if (!this.merchant_id || !this.merchant_secret) {
 			throw new PayHereError("PAYHERE_MERCHANT_ID and PAYHERE_SECRET must be set");
 		}
 	}
 
+	/** Ensure app credentials are provided. */
 	private needAppCredentials() {
 		if (!this.app_id || !this.app_secret) {
 			throw new PayHereError("PAYHERE_APP_ID and PAYHERE_APP_SECRET must be set");
 		}
 	}
 
+	/**
+	 * Generate and cache the Base64-encoded authorization string
+	 * used for OAuth token requests.
+	 */
 	get genBase64Encode(): string {
 		this.needAppCredentials();
 
@@ -88,6 +138,15 @@ export class PayHere {
 		return this._authorizationCode;
 	}
 
+	/**
+	 * Retrieve an OAuth access token from PayHere.
+	 *
+	 * Tokens are cached and reused until expiry.
+	 *
+	 * @returns Access token string
+	 *
+	 * @throws PayHereError if the request fails
+	 */
 	async getAccessToken(): Promise<string> {
 		this.needAppCredentials();
 
@@ -122,6 +181,15 @@ export class PayHere {
 		}
 	}
 
+	/**
+	 * Retrieve payment details using an order ID.
+	 *
+	 * @param order_id - Your internal order ID
+	 *
+	 * @returns PaymentRetrievalResponse containing payment data
+	 *
+	 * @throws PayHereError if the API request fails
+	 */
 	async getPaymentDetails(order_id: string): Promise<PaymentRetrievalResponse> {
 		this.needMerchantCredentials();
 
@@ -156,6 +224,18 @@ export class PayHere {
 		}
 	}
 
+	/**
+	 * Process a refund for a PayHere payment.
+	 *
+	 * @param payment_id - PayHere payment ID
+	 * @param reason - Reason for the refund
+	 * @param amount - Amount to refund (for partial refunds)
+	 * @param refund_type - "full" or "partial"
+	 *
+	 * @returns PayHereRefundResponse
+	 *
+	 * @throws PayHereError if refund fails
+	 */
 	async refundPayment(
 		payment_id: number,
 		reason: string,
@@ -202,10 +282,16 @@ export class PayHere {
 		}
 	}
 
+	/**
+	 * Generate a payment hash using this instance's merchant credentials.
+	 */
 	generatePaymentHash(order_id: string, amount: string, currency: Currency = "LKR") {
 		return generatePaymentHash(order_id, amount, this.merchant_id, this.merchant_secret, currency);
 	}
 
+	/**
+	 * Generate a payment hash using this instance's merchant credentials.
+	 */
 	verifyPaymentSignature(data: any) {
 		return verifyPaymentSignature(data, this.merchant_id, this.merchant_secret);
 	}
