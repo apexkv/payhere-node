@@ -1,10 +1,3 @@
-Great idea keeping **documentation consistent** across all your SDKs 👍
-Below is a **PayHere Node.js SDK README** written to match the style, tone, and structure of your Python version.
-
-You can copy–paste this directly as `README.md` in your **payhere-node** repository.
-
----
-
 # 📦 PayHere Node.js SDK (Unofficial)
 
 Unofficial Node.js / TypeScript SDK for integrating with the PayHere payment gateway.
@@ -17,8 +10,6 @@ This is an **unofficial SDK** developed independently and is **not affiliated wi
 Use at your own risk.
 Always test in **sandbox mode** before going live.
 
----
-
 ## 🎯 Features
 
 -   Create payment hashes
@@ -28,8 +19,6 @@ Always test in **sandbox mode** before going live.
 -   Support for sandbox and production environments
 -   TypeScript support
 -   Easy-to-use API
-
----
 
 ## 📥 Installation
 
@@ -42,8 +31,6 @@ or
 ```bash
 yarn add payhere-node
 ```
-
----
 
 ## 🚀 Quick Start
 
@@ -65,8 +52,6 @@ const payhere = new PayHere(
 );
 ```
 
----
-
 ## 🔐 Generate Payment Hash
 
 > **Always generate the hash on the backend in production. Never expose your merchant secret on the frontend.**
@@ -82,8 +67,6 @@ const hash = payhere.generatePaymentHash("ORDER123", "1000.00", "LKR");
 ```ts
 const hash = generatePaymentHash("ORDER123", "1000.00", "YOUR_MERCHANT_ID", "YOUR_MERCHANT_SECRET", "LKR");
 ```
-
----
 
 ## ✅ Verify Payment Signature (Webhook)
 
@@ -110,8 +93,6 @@ Or using the client:
 const isValid = payhere.verifyPaymentSignature(webhookData);
 ```
 
----
-
 ## 📄 Retrieve Payment Details
 
 > Requires **App ID** and **App Secret**
@@ -127,8 +108,6 @@ try {
 	}
 }
 ```
-
----
 
 ## 💸 Process Refunds
 
@@ -157,8 +136,6 @@ try {
 }
 ```
 
----
-
 ## ✅ Supported PayHere API Endpoints
 
 -   Payment Details Retrieval
@@ -166,8 +143,6 @@ try {
 -   Partial Refund
 -   Payment Hash Generation
 -   Payment Notify Signature Verification
-
----
 
 ## 🚀 PayHere Sandbox Setup Guide
 
@@ -181,8 +156,6 @@ try {
 8. Add `http://localhost` to allowed origins
 9. Copy **App ID** and **App Secret**
 
----
-
 ## 🔒 Security Notes
 
 -   Never expose `merchant_secret` in frontend
@@ -190,8 +163,6 @@ try {
 -   Use sandbox before production
 -   Validate PayHere webhooks
 -   Store API credentials securely
-
----
 
 ## 📄 License
 
@@ -202,16 +173,12 @@ as long as all derivative works remain open source and credit the original autho
 
 See the [LICENSE](LICENSE) file for details.
 
----
-
 ## 👨‍💻 Author
 
 -   **Kavindu Harshitha (apexkv)**
 -   GitHub: [https://github.com/apexkv](https://github.com/apexkv)
 -   Website: [https://apexkv.com](https://apexkv.com)
 -   Email: [kavindu@apexkv.com](mailto:kavindu@apexkv.com)
-
----
 
 ## 🤝 Contributing
 
@@ -222,14 +189,10 @@ Contributions are welcome!
 -   Improve docs
 -   Add new features
 
----
-
 ## 📚 Used Technologies
 
 -   [PayHere](https://www.payhere.lk/) – Payment gateway
 -   TypeScript
-
----
 
 ## ⭐ Support the Project
 
@@ -238,8 +201,6 @@ If this SDK helps you:
 -   ⭐ Star the repo
 -   🔁 Share with other devs
 -   🛠 Contribute improvements
-
----
 
 ## ©️ Copyright
 
