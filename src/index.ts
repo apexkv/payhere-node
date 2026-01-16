@@ -1,3 +1,4 @@
+// src/index.ts
 export { PayHere, generatePaymentHash, verifyPaymentSignature } from "./main";
 export { PayHereError } from "./errors";
 export {
