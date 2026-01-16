@@ -1,13 +1,36 @@
 {
-  "name": "payhere-node",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs"
+	"name": "payhere-node",
+	"version": "1.0.0",
+	"description": "Unofficial Node.js SDK for PayHere payment gateway",
+	"author": "Kavindu Harshitha (apexkv)",
+	"license": "GPL-3.0",
+	"type": "module",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"files": [
+		"dist",
+		"README.md",
+		"LICENSE"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/apexkv/payhere-node"
+	},
+	"keywords": [
+		"payhere",
+		"node",
+		"nodejs",
+		"payments",
+		"sdk",
+		"sri-lanka"
+	],
+	"scripts": {
+		"build": "tsup src/index.ts --format esm --dts",
+		"prepublishOnly": "npm run build"
+	},
+	"devDependencies": {
+		"@types/node": "^20.11.30",
+		"tsup": "^8.5.1",
+		"typescript": "^5.9.3"
+	}
 }
