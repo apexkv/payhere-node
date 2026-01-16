@@ -102,7 +102,7 @@ export class PayHere {
 		public app_id = "",
 		public app_secret = "",
 		public sandbox_enabled = true,
-		public request_timeout = 20000
+		public request_timeout = 20000 // 20 seconds
 	) {}
 
 	/** Get the correct PayHere base URL (sandbox or production). */
@@ -162,6 +162,7 @@ export class PayHere {
 					"Content-Type": "application/x-www-form-urlencoded",
 				},
 				body: "grant_type=client_credentials",
+				signal: AbortSignal.timeout(this.request_timeout),
 			});
 
 			const data = await res.json();
@@ -203,6 +204,7 @@ export class PayHere {
 						Authorization: `Bearer ${token}`,
 						"Content-Type": "application/json",
 					},
+					signal: AbortSignal.timeout(this.request_timeout),
 				}
 			);
 
@@ -263,6 +265,7 @@ export class PayHere {
 					"Content-Type": "application/json",
 				},
 				body: JSON.stringify(body),
+				signal: AbortSignal.timeout(this.request_timeout),
 			});
 
 			const data = await res.json();
