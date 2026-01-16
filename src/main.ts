@@ -222,7 +222,10 @@ export class PayHere {
 
 			return data as PaymentRetrievalResponse;
 		} catch (error: any) {
-			throw new PayHereError("Failed to fetch payment details: " + error.message);
+			throw new PayHereError(
+				"Failed to fetch payment details. Please check if the order ID is correct or you have enabled payment retrieval on your PayHere account.\nError: " +
+					error.message
+			);
 		}
 	}
 
@@ -281,7 +284,9 @@ export class PayHere {
 
 			return data as PayHereRefundResponse;
 		} catch (error: any) {
-			throw new PayHereError("Failed to process refund: " + error.message);
+			throw new PayHereError(
+				"Refund failed. Please check if refunds are enabled on your PayHere account.\nError: " + error.message
+			);
 		}
 	}
 
